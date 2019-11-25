@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Created by https://github.com/SkiTheSlicer
+# Updated by https://github.com/edwardrixon
 
 def parse_arguments():
   import argparse
@@ -185,7 +186,7 @@ def update_snort_blacklists(directory_to_walk):
       with open(path, 'r') as new_blacklist:
         for line in new_blacklist:
           blacklist_cmd_p1 = subprocess.Popen(['echo', line.strip() + '\t#' + datetime_now + '\t' + os.path.basename(path)], stdout=subprocess.PIPE)
-          blacklist_cmd_p2 = subprocess.Popen(['sudo', 'tee', '-a', '/etc/nsm/rules/black_list.rules'], stdin=blacklist_cmd_p1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)          
+          blacklist_cmd_p2 = subprocess.Popen(['sudo', 'tee', '-a', '/etc/nsm/rules/black_list.rules'], stdin=blacklist_cmd_p1.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
       #blacklist_cmd = 'for line in $(cat ' + path + '); do echo $line\t#' + datetime_now + '\t' + os.path.basename(path) + '| sudo tee -a /etc/nsm/rules/black_list.rules; done'
       #print 'TEST: ' + blacklist_cmd
       #import shlex
@@ -209,12 +210,6 @@ def main():
     sys.exit(1)
   elif not os.path.isdir(args.blacklists_dir):
     print 'ERROR: ' + args.blacklists_dir + ' is invalid directory. Exitting.'
-    sys.exit(1)
-  if not os.path.exists(args.geoip_dir):
-    print 'ERROR: ' + args.geoip_dir + ' doesn\'t exist. Exitting.'
-    sys.exit(1)
-  elif not os.path.isdir(args.geoip_dir):
-    print 'ERROR: ' + args.geoip_dir + ' is invalid directory. Exitting.'
     sys.exit(1)
   if not os.path.exists(args.rules_dir):
     print 'ERROR: ' + args.rules_dir + ' doesn\'t exist. Exitting.'
