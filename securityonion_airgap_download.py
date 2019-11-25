@@ -2,6 +2,7 @@
 # 20151223  https://github.com/SkiTheSlicer
 # 20151227  Started adding OS Walk, MD5 Check, TAR support. Not yet functional.
 # 20151229  Added TAR support. Required input DIR to be raw (because of DIRs named like \20151229).
+# Updated for latest support by https://github.com/edwardrixon
 
 def parse_arguments():
   from datetime import datetime
@@ -194,35 +195,7 @@ def main():
   if not os.path.exists(args.output_dir):
     os.makedirs(args.output_dir)
   print "Output Dir: " + args.output_dir
- # Download GeoIP information.
-  print "\n[GeoIP]"
-  urls_geoip = [
-    "http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz",
-    "http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz",
-    "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz",
-    "http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz"
-  ]
-  for url in urls_geoip:
-    requests_download_file(url, os.path.join(args.output_dir, "GeoIP"))
-    decompress_gunzip_files(os.path.join(args.output_dir, "GeoIP"))
- # Download Regional Internet Registry information.
-  print "\n[RIR]"
-  urls_rir = [
-    "http://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-extended-latest",
-    "http://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-extended-latest.md5",
-    "http://ftp.apnic.net/pub/stats/apnic/delegated-apnic-extended-latest",
-    "http://ftp.apnic.net/pub/stats/apnic/delegated-apnic-extended-latest.md5",
-    "http://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest",
-    "http://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest.md5",
-    "http://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest",
-    "http://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest.md5",
-    "http://ftp.ripe.net/ripe/stats/delegated-ripencc-extended-latest",
-    "http://ftp.ripe.net/ripe/stats/delegated-ripencc-extended-latest.md5"
-  ]
-  for url in urls_rir:
-    requests_download_file(url, os.path.join(args.output_dir, "RIR"))
-  compare_md5s(os.path.join(args.output_dir, "RIR"))
- # Download statically-defined Snort rulesets.
+  # Download statically-defined Snort rulesets.
   print "\n[Snort Static]"
   urls_snort_static = [
     ["VRT_Community", "https://www.snort.org/downloads/community/community-rules.tar.gz"],
@@ -232,7 +205,7 @@ def main():
   ]#["VRT_Community", "https://www.snort.org/downloads/community/opensource.tar.gz"],
   for url in urls_snort_static:
    requests_download_file(url[1], os.path.join(args.output_dir, "Snort", url[0]))
-   #compare_md5s(os.path.join(args.output_dir, "Snort", url[0]))
+  compare_md5s(os.path.join(args.output_dir, "Snort", url[0]))
   extract_md5s(os.path.join(args.output_dir, "Snort", "VRT_Community"))
   compare_md5s(os.path.join(args.output_dir, "Snort", "VRT_Community"))
  # Download dynamically-defined Snort rulesets.
@@ -252,10 +225,10 @@ def main():
   if args.snort_email:
     print "\n[Snort VRT Dynamic]"
    # Scrape for all rule file paths
-    current_vrt_versions = scrape_snort("https://www.snort.org/downloads/", "VRT")
+    current_vrt_versions = scrape_snort("https://www.snort.org/downloads/snort/md5s", "VRT")
     current_vrt_versions.append("md5s")
     for idx, val in enumerate(current_vrt_versions):
-      current_vrt_versions[idx] = "/".join(["https://www.snort.org/downloads/registered", val])
+      current_vrt_versions[idx] = "/".join(["https://www.snort.org/downloads/registered/md5s", val])
    # Download rules
     requests_login_download_file(current_vrt_versions, os.path.join(args.output_dir, "Snort", "VRT_Registered"), "https://www.snort.org/users/sign_in", args.snort_email)
     extract_md5s(os.path.join(args.output_dir, "Snort", "VRT_Registered"))
