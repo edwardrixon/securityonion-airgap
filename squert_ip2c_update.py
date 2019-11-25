@@ -3,6 +3,7 @@
 # Ref: /var/www/so/squert/.scripts/ip2c.tcl
 # Ref: /var/www/so/squert/.scripts/squert.sql
 # Req: http://repo.mysql.com/apt/ubuntu/pool/connector-python-2.1/m/mysql-connector-python/
+# Updated by https://github.com/edwardrixon
 
 def parse_arguments():
   import argparse
@@ -101,7 +102,7 @@ def create_table(db_name, table_name):
   cursor.close()
   cnx.close()
   print "  (Re)Creation complete"
-  
+
 def update_table(db_name, table_name, input_file):
   import os
   import sys
