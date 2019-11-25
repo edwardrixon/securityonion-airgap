@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Created by https://github.com/SkiTheSlicer
+# Updated by https://github.com/edwardrixon
 
 #from securityonion_airgap_download import compare_md5s
 
@@ -60,28 +61,19 @@ def main():
     base_dir = args.input_file[:-7]
     print 'Base Dir: ' + base_dir
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    ip2c_script = script_dir + '/squert_ip2c_update.py'
+    #ip2c_script = script_dir + '/squert_ip2c_update.py'
     #ip2c_cmd = script_dir + '/squert_ip2c_update.py -d ' + os.path.join(base_dir, 'RIR')
     ids_script = script_dir + '/ids_offline_update.py'
     #print os.path.abspath(base_dir)
-    if args.geoip:
-      print '\n[MAIN -> IDS: GeoIP]'
-      subprocess.call(['python', ids_script, '--geoip', '-G' + os.path.join(os.path.abspath(base_dir), 'GeoIP')])
-    elif args.rules:
+    if args.rules:
       print '\n[MAIN -> IDS: Snort Rules]'
       # what about Doing blacklist?
       subprocess.call(['python', ids_script, '--rules', '-R' + os.path.join(os.path.abspath(base_dir), 'Snort')])
-    elif args.ip2c:
-      print '\n[MAIN -> IP2C]'
-      ##subprocess.call(['python', ip2c_script, '-h'])
-      ##subprocess.call(['python', ip2c_cmd])
-      subprocess.call(['python', ip2c_script, '-d' + os.path.join(os.path.abspath(base_dir), 'RIR')])
-      ##subprocess.call(['sudo', 'python', ip2c_script, '-d' + os.path.join(os.path.abspath(base_dir), 'RIR')])
     else:
-      print '\n[MAIN -> IDS: Blacklists, GeoIP, Rules]'
-      subprocess.call(['python', ids_script, '-B' + os.path.join(os.path.abspath(base_dir), 'Snort', 'Blacklist'), '-G' + os.path.join(os.path.abspath(base_dir), 'GeoIP'), '-R' + os.path.join(os.path.abspath(base_dir), 'Snort')])
-      print '\n[MAIN -> IP2C]'
-      subprocess.call(['python', ip2c_script, '-d' + os.path.join(os.path.abspath(base_dir), 'RIR')])
+      print '\n[MAIN -> IDS: Blacklists, Rules]'
+      subprocess.call(['python', ids_script, '-B' + os.path.join(os.path.abspath(base_dir), 'Snort', 'Blacklist'), '-R' + os.path.join(os.path.abspath(base_dir), 'Snort')])
+     # print '\n[MAIN -> IP2C]'
+      #subprocess.call(['python', ip2c_script, '-d' + os.path.join(os.path.abspath(base_dir), 'RIR')])
       print '\nFinished!'
 
 if __name__ == "__main__":
