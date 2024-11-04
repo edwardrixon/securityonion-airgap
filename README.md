@@ -1,3 +1,4 @@
+[![Python application](https://github.com/edwardrixon/securityonion-airgap/actions/workflows/pythonapp.yml/badge.svg)](https://github.com/edwardrixon/securityonion-airgap/actions/workflows/pythonapp.yml)
 #SecurityOnion-AirGap
 
 ##Purpose
